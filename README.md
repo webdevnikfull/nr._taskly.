@@ -1,6 +1,6 @@
 # 🎯 Taskly - Modern To-Do App & QA Portfolio
 
-![Taskly App Interface]()
+![Taskly App Interface](banner.png)
 
 > **About the project:** Taskly is an intuitive web application for task management, designed with a focus on a clean user interface (UI) and reliable business logic. This repository is a key component of my QA portfolio, demonstrating both the structure of modern frontend code and a professional approach to quality assurance (Shift-Left QA) through unit testing and comprehensive test documentation. In the latest release, the application has been enhanced with a multi-language (i18n) architecture.
 

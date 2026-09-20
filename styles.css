@@ -18,3 +18,10 @@
 .overline,.breadcrumb,.nav-item{color:#647792}
 @media(max-width:520px){.task-title{font-size:13px}.task-notes{font-size:11px}.task-meta{font-size:9px}.metric-label{font-size:9px}.metric-note{font-size:8px}.priority{font-size:8px}.panel-heading p{font-size:10px}.search input,.filters select,.quick-add input{font-size:11px}.row-actions .icon-button{width:27px;height:29px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
+
+/* Language selection and longer international labels. */
+.language-select{max-width:145px;min-height:36px;color:var(--navy);background:white;font-size:11px;border-radius:8px;padding:7px 10px}
+.topbar{gap:12px}.topbar>span{min-width:0}.topbar-right{flex-shrink:0;gap:12px}.nav-item span{overflow-wrap:anywhere}.metric-label{flex-wrap:wrap}.task-panel .panel-heading{flex-wrap:wrap}.hero .button{white-space:normal}.sidebar-tip{flex-shrink:0}.sidebar{min-height:700px}
+@media(max-width:1100px){.filters{flex-wrap:wrap}.filters select{max-width:100%}}
+@media(max-width:800px){.sidebar{min-height:0}.topbar{height:auto;min-height:62px;flex-wrap:wrap;padding-block:10px}.topbar-right{margin-left:auto}.language-select{max-width:125px}}
+@media(max-width:520px){.nav-item{min-width:0;flex:1}.nav-item span{width:100%;font-size:9px}.filters label{min-width:0}.metric-label{white-space:normal;min-height:28px}.panel-footer{flex-wrap:wrap}.dialog-footer{flex-wrap:wrap}.dialog-footer .button{white-space:normal}.topbar .breadcrumb{display:none}.topbar .slash{display:none}.language-select{max-width:115px}.topbar strong{font-size:9px}.bottom-note{flex-wrap:wrap}}

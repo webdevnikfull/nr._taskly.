@@ -1,48 +1,46 @@
-# 🎯 Taskly - Nowoczesna aplikacja To-Do & QA Portfolio
+# Taskly — personal task manager
 
-![Interfejs aplikacji Taskly](banner.png)
+Projekt portfolio Nikity Rysieva. HTML, CSS i JavaScript bez zewnętrznych bibliotek, fontów i usług. Interfejs po polsku, responsywny układ w granatowej stylistyce portfolio.
 
-> **O projekcie:** Taskly to intuicyjna aplikacja webowa do zarządzania zadaniami, zaprojektowana z naciskiem na przejrzysty interfejs (UI) oraz niezawodną logikę biznesową. Repozytorium to stanowi kluczowy element mojego portfolio QA, demonstrując zarówno strukturę nowoczesnego kodu frontendowego, jak i profesjonalne podejście do zapewnienia jakości (Shift-Left QA) poprzez testy jednostkowe oraz pełną dokumentację testową.
+## Uruchomienie
 
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
-![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
-![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
-![Unit Testing](https://img.shields.io/badge/Unit_Testing-C21325?style=for-the-badge&logo=jest&logoColor=white)
+Otwórz `index.html` albo umieść cały folder na hostingu statycznym. Dla stabilnego działania localStorage użyj serwera HTTP, np. `python -m http.server 8080`, i otwórz http://localhost:8080.
 
-## ✨ Główne funkcjonalności aplikacji
+## Funkcje
 
-Aplikacja została zaprojektowana tak, aby maksymalizować produktywność i zapewniać pełną kontrolę nad planem dnia:
-* **Zarządzanie zadaniami:** Płynne dodawanie, edycja oraz usuwanie codziennych zadań.
-* **Kategoryzacja i widoki:** Organizacja pracy z wykorzystaniem wbudowanych list: Wszystkie, Dzisiaj, Zaplanowane oraz Ukończone.
-* **Priorytetyzacja:** Łatwe przypisywanie poziomów ważności do zadań (Wysoki, Średni, Niski).
-* **Śledzenie postępów:** Wizualizacja wskaźnika ukończonych zadań w formie wykresu procentowego.
-* **Zaawansowane filtrowanie:** Możliwość wyszukiwania konkretnych zadań oraz filtrowania ich po priorytetach i dacie dodania.
+- Dodawanie, edycja, kończenie, przywracanie i usuwanie zadań.
+- Cofanie usunięcia przez 15 sekund.
+- Notatki, terminy i trzy priorytety.
+- Widoki aktywnych, dzisiejszych, zaplanowanych i ukończonych zadań.
+- Wyszukiwanie po nazwie i notatce, filtrowanie oraz sortowanie.
+- Zapis w localStorage, synchronizacja otwartych kart, eksport JSON.
+- Przykładowe zadania oznaczone w UI, możliwe do usunięcia niezależnie od własnych zadań.
+- Klawiatura: N — nowe zadanie, / — wyszukiwanie, Escape — zamknięcie formularza.
 
-## 🧪 Podejście QA i Struktura Testów
+Widok „Wszystkie” pokazuje zadania aktywne; ukończone mają własną zakładkę. „Zaplanowane” obejmuje wszystkie aktywne zadania z terminem, również zaległe. Termin jest datą lokalną bez godziny.
 
-Jako Inżynier QA, szczególną uwagę w tym projekcie zwróciłem na niezawodność kodu oraz weryfikację logiki biznesowej:
+Dane są lokalne dla przeglądarki i adresu strony. Nie ma konta użytkownika, serwera, synchronizacji między urządzeniami ani powiadomień o terminach. Usunięcie danych przeglądarki usuwa zapis — eksport JSON służy jako kopia. Przy równoczesnych zapisach z wielu kart obowiązuje ostatni zapis.
 
-* **Dokumentacja QA:** Zidentyfikowane przypadki brzegowe, scenariusze testowe (pozytywne i negatywne) oraz raporty z błędów zostały szczegółowo udokumentowane w pliku `QA-REPORT.md`.
-* **Testy jednostkowe (Unit Tests):** Operacje na danych i logika zarządzania stanem są rygorystycznie weryfikowane za pomocą testów jednostkowych znajdujących się w dedykowanym pliku `tests/model.test.cjs`.
-* **Separacja logiki:** Architektura projektu świadomie dzieli aplikację na warstwę danych/logiki (`model.js`) oraz warstwę prezentacji (`app.js`), co ułatwia izolowane testowanie automatyczne (Testability).
+## Kod i testy
 
-## 📂 Architektura repozytorium
+- `model.js`: walidacja, filtry, sortowanie i format zapisu.
+- `app.js`: interakcje, DOM i localStorage. Nazwy i notatki są renderowane przez textContent, bez wykonywania HTML użytkownika.
+- `styles.css`: wygląd oraz breakpointy.
+- `tests/model.test.cjs`: testy regresji. Uruchom `node --test tests/model.test.cjs`.
 
-* `index.html` / `styles.css` – Struktura semantyczna oraz stylizacja nowoczesnego interfejsu użytkownika.
-* `app.js` – Główny kontroler widoku, logika interakcji z DOM oraz nasłuchiwanie zdarzeń.
-* `model.js` – Model danych odpowiadający za operacje CRUD na zadaniach.
-* `tests/model.test.cjs` – Zestaw skryptów testowych automatyzujących weryfikację modelu.
-* `QA-REPORT.md` – Zestawienie wyników testów manualnych, eksploracyjnych i weryfikacji wymagań.
+## Scenariusze manualne QA
 
-## 🚀 Uruchomienie środowiska lokalnego
+1. Dodaj zadanie, odśwież stronę, sprawdź treść i liczniki.
+2. Spróbuj zapisać pustą nazwę i same spacje; zapis powinien być odrzucony.
+3. Zmień nazwę, notatkę, priorytet i termin. Sprawdź odpowiednie filtry.
+4. Ukończ zadanie; przejdź do Ukończonych i przywróć je.
+5. Usuń zadanie i cofnij; treść i stan powinny zostać zachowane.
+6. Wyszukaj nieistniejącą frazę i wyczyść filtry z pustego widoku.
+7. Usuń przykłady; własne zadania powinny pozostać.
+8. Obsłuż formularz klawiaturą, sprawdź Escape i powrót fokusu.
+9. Sprawdź układ na telefonie i eksport JSON.
 
-Aby uruchomić aplikację oraz zestaw testów na lokalnym środowisku, postępuj zgodnie z poniższymi krokami:
+## Wersje językowe
+PL, EN, DE, ES, FR, UK i RU. Język wybiera się w nagłówku; wybór zapisuje się w przeglądarce. Tłumaczenia interfejsu, komunikatów i przykładów znajdują się w translations.js, a obsługa w i18n.js. Nazwy i notatki użytkownika nie są tłumaczone ani nadpisywane. Daty i sortowanie alfabetyczne używają wybranego języka. Systemowy kalendarz pola daty może korzystać z języka przeglądarki.
+Testy tłumaczeń: node tests/i18n.test.cjs
 
-### 1. Uruchomienie aplikacji UI
-Aplikacja wykorzystuje Vanilla JS. Wystarczy sklonować repozytorium i otworzyć plik `index.html` w dowolnej nowoczesnej przeglądarce (zalecane jest użycie rozszerzenia *Live Server* w edytorze kodu dla najlepszego doświadczenia).
-
-### 2. Uruchomienie testów automatycznych
-Upewnij się, że posiadasz zainstalowane środowisko Node.js. Otwórz terminal w katalogu głównym projektu i wykonaj polecenia:
-```bash
-npm install
-npm test

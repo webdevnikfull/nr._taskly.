@@ -32,17 +32,17 @@
       planned:tasks.filter(t=>!t.completed && t.due).length, done:tasks.filter(t=>t.completed).length,
       overdue:tasks.filter(t=>!t.completed && t.due && t.due<today).length, total:tasks.length };
   }
-  function visible(tasks, {view='all', search='', priority='all', sort='newest', today=localDate()} = {}) {
-    const query=search.trim().toLocaleLowerCase('pl');
+  function visible(tasks, {view='all', search='', priority='all', sort='newest', today=localDate(), locale='pl'} = {}) {
+    const query=search.trim().toLocaleLowerCase(locale);
     return tasks.filter(t => (view==='done' ? t.completed : !t.completed)
       && (view!=='today' || t.due===today) && (view!=='planned' || !!t.due)
       && (priority==='all' || t.priority===priority)
-      && (!query || `${t.title} ${t.notes}`.toLocaleLowerCase('pl').includes(query)))
+      && (!query || `${t.title} ${t.notes}`.toLocaleLowerCase(locale).includes(query)))
       .sort((a,b)=> {
         let order=0;
         if(sort==='due') order=(a.due||'9999-99-99').localeCompare(b.due||'9999-99-99');
         if(sort==='priority') order=PRIORITIES.indexOf(a.priority)-PRIORITIES.indexOf(b.priority);
-        if(sort==='title') order=a.title.localeCompare(b.title,'pl');
+        if(sort==='title') order=a.title.localeCompare(b.title,locale);
         return order || b.createdAt-a.createdAt || a.id.localeCompare(b.id);
       });
   }

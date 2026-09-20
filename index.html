@@ -9,6 +9,8 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="styles.css">
   <script src="model.js" defer></script>
+  <script src="translations.js" defer></script>
+  <script src="i18n.js" defer></script>
   <script src="app.js" defer></script>
 </head>
 <body>
@@ -41,7 +43,7 @@
       <div class="sidebar-bottom"><span class="local-dot"></span><span id="save-status">Zapis na tym urządzeniu</span></div>
     </aside>
     <div class="main-shell">
-      <header class="topbar"><span><span class="breadcrumb">Moja przestrzeń</span><span class="slash">/</span><strong id="breadcrumb-view">Wszystkie zadania</strong></span><div class="topbar-right"><span class="project-label">PORTFOLIO PROJECT / 01</span><button class="icon-button" id="export" aria-label="Eksportuj zadania do pliku JSON" title="Eksportuj zadania"><svg><use href="#i-download"/></svg></button></div></header>
+      <header class="topbar"><span><span class="breadcrumb">Moja przestrzeń</span><span class="slash">/</span><strong id="breadcrumb-view">Wszystkie zadania</strong></span><div class="topbar-right"><select id="language" class="language-select" aria-label="Język aplikacji"><option value="pl" lang="pl">Polski</option><option value="en" lang="en">English</option><option value="de" lang="de">Deutsch</option><option value="es" lang="es">Español</option><option value="fr" lang="fr">Français</option><option value="uk" lang="uk">Українська</option><option value="ru" lang="ru">Русский</option></select><span class="project-label">PORTFOLIO PROJECT / 01</span><button class="icon-button" id="export" aria-label="Eksportuj zadania do pliku JSON" title="Eksportuj zadania"><svg><use href="#i-download"/></svg></button></div></header>
       <main id="main">
         <div class="hero"><div><p class="overline" id="today-label"></p><h1>Mniej chaosu.<br><span>Więcej zrobione.</span></h1><p class="hero-subtitle">Przestrzeń na to, co naprawdę chcesz zrobić.</p></div><button class="button primary" id="new-task"><svg><use href="#i-plus"/></svg>Nowe zadanie <kbd>N</kbd></button></div>
         <section class="metrics" aria-label="Podsumowanie zadań">

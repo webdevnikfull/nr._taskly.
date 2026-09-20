@@ -22,3 +22,7 @@ Sprawdzono: puste nazwy i same spacje, niepoprawne daty i priorytety, rok przest
 ## Zakres i ograniczenia
 
 Testy interakcji wykonano w przeglądarce wbudowanej w Codex. Nie jest to pełna macierz Chrome/Firefox/Safari ani audyt WCAG. Eksport używa pliku Blob i atrybutu download; wbudowana przeglądarka nie potwierdziła zdarzenia pobrania. Pobieranie należy dodatkowo sprawdzić w docelowej przeglądarce. Nie symulowano pełnego limitu localStorage ani równoczesnych konfliktujących zapisów między kartami. Funkcja obsługi błędów zapisu i synchronizacji między kartami jest zaimplementowana.
+
+## Aktualizacja wielojęzyczna
+Przełączanie PL/EN/DE/ES/FR/UK/RU, lokalizacja dat i przykładów, zachowanie nazwy własnego zadania, zapis języka po odświeżeniu, niemiecka walidacja pustej nazwy oraz francuskie wyszukiwanie sprawdzone w przeglądarce. Dwa dodatkowe testy sprawdzają kompletność słowników, parametry komunikatów i zachowanie danych podczas sortowania lokalnego. Razem: 8 testów logiki i tłumaczeń.
+

@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Taskly — przejrzysta aplikacja do zarządzania zadaniami. Projekt portfolio Nikity Rysieva.">
+  <meta name="theme-color" content="#102866">
+  <title>Taskly — Twój dzień, uporządkowany</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="styles.css">
+  <script src="model.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Przejdź do zadań</a>
+  <svg class="sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1.5"/><rect x="14" y="4" width="6" height="6" rx="1.5"/><rect x="4" y="14" width="6" height="6" rx="1.5"/><rect x="14" y="14" width="6" height="6" rx="1.5"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="16" rx="3"/><path d="M8 3v4m8-4v4M4 11h16m-11 4h2m2 0h2"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="m15 4 5 5M4 20l5-1L20 8a3.5 3.5 0 0 0-5-5L4 15v5Z"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7m4-7v7"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-4-4 4 4 4-4M4 16v5h16v-5"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+  </svg>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="logo" href="./" aria-label="Taskly — strona główna"><span class="logo-mark"><svg><use href="#i-check"/></svg></span>taskly<span class="logo-dot">.</span></a>
+      <div class="workspace"><span class="avatar">NR</span><div><strong>Moja przestrzeń</strong><span>Osobista lista zadań</span></div><span class="workspace-dot"></span></div>
+      <p class="overline nav-label">TWOJE ZADANIA</p>
+      <nav aria-label="Widoki zadań" id="views">
+        <button class="nav-item active" data-view="all" aria-current="page"><svg><use href="#i-grid"/></svg><span>Wszystkie</span><b data-count="all">0</b></button>
+        <button class="nav-item" data-view="today"><svg><use href="#i-sun"/></svg><span>Dzisiaj</span><b data-count="today">0</b></button>
+        <button class="nav-item" data-view="planned"><svg><use href="#i-calendar"/></svg><span>Zaplanowane</span><b data-count="planned">0</b></button>
+        <button class="nav-item" data-view="done"><svg><use href="#i-check"/></svg><span>Ukończone</span><b data-count="done">0</b></button>
+      </nav>
+      <div class="sidebar-tip"><span class="tip-icon">✳</span><h3>Małe kroki.<br>Dobry kierunek.</h3><p>Wybierz jedno zadanie.<br>Daj mu swoją uwagę.</p><div class="tip-line"></div><span>ONE THING AT A TIME</span></div>
+      <div class="sidebar-bottom"><span class="local-dot"></span><span id="save-status">Zapis na tym urządzeniu</span></div>
+    </aside>
+    <div class="main-shell">
+      <header class="topbar"><span><span class="breadcrumb">Moja przestrzeń</span><span class="slash">/</span><strong id="breadcrumb-view">Wszystkie zadania</strong></span><div class="topbar-right"><span class="project-label">PORTFOLIO PROJECT / 01</span><button class="icon-button" id="export" aria-label="Eksportuj zadania do pliku JSON" title="Eksportuj zadania"><svg><use href="#i-download"/></svg></button></div></header>
+      <main id="main">
+        <div class="hero"><div><p class="overline" id="today-label"></p><h1>Mniej chaosu.<br><span>Więcej zrobione.</span></h1><p class="hero-subtitle">Przestrzeń na to, co naprawdę chcesz zrobić.</p></div><button class="button primary" id="new-task"><svg><use href="#i-plus"/></svg>Nowe zadanie <kbd>N</kbd></button></div>
+        <section class="metrics" aria-label="Podsumowanie zadań">
+          <div class="metric"><div class="metric-label"><svg><use href="#i-grid"/></svg>Do zrobienia</div><div class="metric-value" id="metric-open">0</div><span class="metric-note">Jeden krok po drugim</span></div>
+          <div class="metric"><div class="metric-label"><svg><use href="#i-sun"/></svg>Na dzisiaj</div><div class="metric-value" id="metric-today">0</div><span class="metric-note" id="overdue-note">W swoim tempie</span></div>
+          <div class="metric progress-metric"><div><div class="metric-label"><svg><use href="#i-check"/></svg>Ukończone</div><div class="metric-value" id="metric-done">0<span>/ 0</span></div><span class="metric-note">Każde zadanie to mały sukces</span></div><svg class="progress-ring" viewBox="0 0 68 68" aria-hidden="true"><circle cx="34" cy="34" r="28"/><circle id="progress-circle" cx="34" cy="34" r="28"/><text id="progress-text" x="34" y="38" text-anchor="middle">0%</text></svg></div>
+        </section>
+        <section class="task-panel" aria-labelledby="list-heading">
+          <div class="panel-heading"><div><h2 id="list-heading">Wszystkie zadania <span id="list-count">0</span></h2><p id="list-description">Dobry plan zaczyna się od małych kroków.</p></div><span class="sample-badge" id="sample-badge">PRZYKŁADOWA LISTA</span></div>
+          <div class="toolbar"><label class="search"><svg><use href="#i-search"/></svg><input id="search" type="search" placeholder="Szukaj zadań…" aria-label="Szukaj zadań" maxlength="200"><kbd>/</kbd></label><div class="filters"><label><span class="sr-only">Filtruj priorytet</span><select id="priority-filter"><option value="all">Każdy priorytet</option><option value="high">Wysoki</option><option value="medium">Średni</option><option value="low">Niski</option></select></label><label><span class="sr-only">Sortowanie zadań</span><select id="sort"><option value="newest">Najnowsze</option><option value="due">Według terminu</option><option value="priority">Według priorytetu</option><option value="title">Alfabetycznie</option></select></label></div></div>
+          <form id="quick-form" class="quick-add"><svg><use href="#i-plus"/></svg><input id="quick-title" maxlength="160" aria-label="Nazwa nowego zadania" placeholder="Co chcesz zrobić? Dodaj zadanie…" autocomplete="off"><button type="submit" aria-label="Dodaj zadanie" title="Dodaj zadanie"><svg><use href="#i-arrow"/></svg></button></form>
+          <div id="task-list" class="task-list"></div>
+          <div id="empty" class="empty" hidden><span class="empty-icon"><svg><use href="#i-check"/></svg></span><h3 id="empty-title">Czysta karta.</h3><p id="empty-description">Dodaj pierwsze zadanie i zrób miejsce na dobry plan.</p><button class="button secondary" id="empty-action">Dodaj zadanie</button></div>
+          <div class="panel-footer"><span id="results-status" role="status" aria-live="polite"></span><span><kbd>Enter</kbd> aby dodać</span></div>
+        </section>
+        <div class="bottom-note"><span><span class="tiny-check">✓</span>Twoje zadania zostają w tej przeglądarce. Eksportuj je, aby zachować kopię.</span><button id="clear-demo" class="text-button">Usuń przykłady</button></div>
+        <footer><span>taskly. <span class="footer-divider">/</span> Designed for a little more clarity.</span><a href="https://github.com/webdevnikfull" target="_blank" rel="noopener noreferrer">Nikita Rysiev ↗</a></footer>
+      </main>
+    </div>
+  </div>
+  <dialog id="editor" aria-labelledby="editor-title">
+    <form id="editor-form">
+      <div class="dialog-header"><div><p class="overline">ZRÓB MIEJSCE NA DOBRY PLAN</p><h2 id="editor-title">Nowe zadanie</h2></div><button class="icon-button" type="button" id="close-editor" aria-label="Zamknij formularz"><svg><use href="#i-close"/></svg></button></div>
+      <label class="field">Nazwa zadania <span aria-hidden="true">*</span><input id="task-title" name="title" required maxlength="160" placeholder="Np. Przygotować scenariusze testowe" autocomplete="off"></label>
+      <label class="field">Notatka <span class="optional">opcjonalnie</span><textarea id="task-notes" name="notes" maxlength="2000" rows="4" placeholder="Szczegóły, pomysły, kolejne kroki…"></textarea></label>
+      <div class="form-grid"><label class="field">Termin<input id="task-due" name="due" type="date" min="1900-01-01" max="9999-12-31"></label><label class="field">Priorytet<select id="task-priority" name="priority"><option value="low">Niski</option><option value="medium" selected>Średni</option><option value="high">Wysoki</option></select></label></div>
+      <p class="form-error" id="form-error" role="alert"></p>
+      <div class="dialog-footer"><button type="button" class="button secondary" id="cancel-editor">Anuluj</button><button class="button primary" type="submit" id="save-task">Dodaj zadanie</button></div>
+    </form>
+  </dialog>
+  <dialog id="confirm-dialog" aria-labelledby="confirm-title"><form method="dialog"><div class="dialog-header"><div><p class="overline">PRZYKŁADOWA LISTA</p><h2 id="confirm-title">Zacząć od czystej kartki?</h2></div></div><p class="confirm-copy">Usuniemy tylko zadania przykładowe. Zadania dodane przez Ciebie pozostaną na liście.</p><div class="dialog-footer"><button class="button secondary" value="cancel">Anuluj</button><button class="button primary" value="remove">Usuń przykłady</button></div></form></dialog>
+  <div class="toast" id="toast" hidden role="status"><span id="toast-message"></span><button id="undo" hidden>Cofnij</button><button class="toast-close" id="dismiss-toast" aria-label="Zamknij powiadomienie">×</button></div>
+  <noscript><p class="noscript">Włącz JavaScript, aby dodawać i zapisywać zadania.</p></noscript>
+</body>
+</html>

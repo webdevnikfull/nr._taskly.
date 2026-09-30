@@ -53,7 +53,7 @@
     return saved.tasks.map(t=> {
       if(typeof t.id!=='string' || !t.id || ids.has(t.id) || typeof t.completed!=='boolean' || !Number.isFinite(t.createdAt) || !Number.isFinite(t.updatedAt)) throw new Error('Nieprawidłowe dane zadania.');
       ids.add(t.id);
-      return {...validate(t), id:t.id, completed:t.completed, createdAt:t.createdAt, updatedAt:t.updatedAt, sample:t.sample===true};
+      return {...validate(t), id:t.id, completed:t.completed, createdAt:t.createdAt, updatedAt:t.updatedAt, sample:t.sample===true, ...(Number.isFinite(t.completedAt)?{completedAt:t.completedAt}:{})};
     });
   }
   return {localDate, validDate, validate, create, counts, visible, decode};

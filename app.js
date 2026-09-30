@@ -1,12 +1,12 @@
 (() => {
   'use strict';
-  const M=window.TaskModel, KEY='taskly.tasks.v1';
+  const M=window.TaskModel;let KEY=window.TasklyProfiles.key();
   const I=window.TasklyI18n, t=I.t;
   const $=selector=>document.querySelector(selector);
   const priorityNames={high:'Wysoki',medium:'Średni',low:'Niski'};
-  const viewNames={all:'Wszystkie zadania',today:'Na dzisiaj',planned:'Zaplanowane',done:'Ukończone'};
+  const viewNames={all:'Wszystkie zadania',today:'Na dzisiaj',planned:'Zaplanowane',done:'Ukończone',calendar:'calendar',reports:'reports'};
   const descriptions={all:'Dobry plan zaczyna się od małych kroków.',today:'Mała lista. Więcej miejsca na skupienie.',planned:'To, co przed Tobą — w swoim czasie.',done:'Zatrzymaj się na chwilę. To już zrobione.'};
-  let tasks=[],view=['all','today','planned','done'].includes(location.hash.slice(1))?location.hash.slice(1):'all',editingId=null,undoAction=null,toastTimer,storageHealthy=true;
+  let tasks=[],view=['all','today','planned','done','calendar','reports'].includes(location.hash.slice(1))?location.hash.slice(1):'all',editingId=null,undoAction=null,toastTimer,storageHealthy=true;
   let day=M.localDate();
   const id=()=>window.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`;
   function seed() {
@@ -24,7 +24,7 @@
     catch {storageHealthy=false;toast(t('Nie udało się zapisać. Wyeksportuj zadania przed zamknięciem strony.'));}
     $('#save-status').textContent=storageHealthy?t('Zapis na tym urządzeniu'):t('Brak trwałego zapisu — eksportuj');
   }
-  try {const saved=localStorage.getItem(KEY); tasks=saved===null?seed():M.decode(saved); if(saved===null)persist();}
+  try {const saved=localStorage.getItem(KEY); tasks=saved===null?(KEY==='taskly.tasks.v1'?seed():[]):M.decode(saved); if(saved===null)persist();}
   catch {tasks=[];storageHealthy=false;$('#save-status').textContent=t('Nie można odczytać zapisanych zadań');toast(t('Nie można odczytać danych. Poprzedni zapis pozostaje nienaruszony.'));}
   function node(tag,className,text) {const e=document.createElement(tag);if(className)e.className=className;if(text!==undefined)e.textContent=text;return e;}
   function icon(name) {const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('aria-hidden','true');const use=document.createElementNS(svg.namespaceURI,'use');use.setAttribute('href',`#i-${name}`);svg.append(use);return svg;}
@@ -34,7 +34,7 @@
     const displayNotes=task.sample?t(task.notes):task.notes;
     const el=node('article','task-row'+(task.completed?' is-done':''));el.dataset.id=task.id;
     const check=node('input','task-check');check.type='checkbox';check.checked=task.completed;check.setAttribute('aria-label',`${task.completed?t('Przywróć'):t('Ukończ')}: ${displayTitle}`);
-    check.addEventListener('change',()=>{task.completed=check.checked;task.updatedAt=Date.now();persist();render();$('#results-status').textContent=task.completed?t('Zadanie ukończone.'):t('Zadanie przywrócone.');const target=$('.task-check')||$('#quick-title');target.focus();});
+    check.addEventListener('change',()=>{task.completed=check.checked;task.updatedAt=Date.now();task.completedAt=task.completed?Date.now():null;persist();render();$('#results-status').textContent=task.completed?t('Zadanie ukończone.'):t('Zadanie przywrócone.');const target=view==='calendar'?($('#day-tasks .task-check')||$('#add-day')):($('.task-check')||$('#quick-title'));target.focus();});
     const content=node('div','task-content'),title=node('button','task-title',displayTitle);title.type='button';title.setAttribute('aria-label',`${t('Edytuj')}: ${displayTitle}`);title.addEventListener('click',()=>openEditor(task));content.append(title);
     if(task.notes)content.append(node('p','task-notes',displayNotes));
     const meta=node('div','task-meta');if(task.due){const date=node('span','task-date'+(!task.completed&&task.due<day?' overdue':''));date.append(icon('calendar'),document.createTextNode(dateLabel(task.due)));if(!task.completed&&task.due<day)date.append(document.createTextNode(' · '+t('po terminie')));meta.append(date);}
@@ -51,7 +51,7 @@
     $('#metric-done').replaceChildren(document.createTextNode(c.done),node('span','',`/ ${c.total}`));
     $('#overdue-note').textContent=c.overdue?t('Po terminie: {count}',{count:c.overdue}):t('W swoim tempie');$('#overdue-note').classList.toggle('warn',c.overdue>0);
     const percent=c.total?Math.round(c.done/c.total*100):0;$('#progress-text').textContent=`${percent}%`;$('#progress-circle').style.strokeDashoffset=176*(1-percent/100);
-    $('#breadcrumb-view').textContent=t(viewNames[view]);$('#list-heading').replaceChildren(document.createTextNode(t(viewNames[view])+' '),node('span','',c[view]));$('#list-description').textContent=t(descriptions[view]);
+    $('#breadcrumb-view').textContent=['calendar','reports'].includes(view)?WorkspaceText.t(view):t(viewNames[view]);$('#list-heading').replaceChildren(document.createTextNode(t(viewNames[view])+' '),node('span','',c[view]||0));$('#list-description').textContent=t(descriptions[view]||descriptions.all);
     const visible=M.visible(tasks.map(task=>({...task,title:task.sample?t(task.title):task.title,notes:task.sample?t(task.notes):task.notes})),{locale:I.language,view,search:$('#search').value,priority:$('#priority-filter').value,sort:$('#sort').value,today:day});
     $('#task-list').replaceChildren(...visible.map(item=>row(tasks.find(task=>task.id===item.id))));$('#empty').hidden=visible.length>0;$('#list-count')?.remove();
     const filtered=$('#search').value.trim()||$('#priority-filter').value!=='all';
@@ -59,16 +59,19 @@
     $('#empty-description').textContent=filtered?t('Zmień wyszukiwanie lub usuń filtr priorytetu.'):view==='done'?t('Ukończone zadania pojawią się tutaj.'):t('Dodaj zadanie i zrób miejsce na dobry plan.');
     $('#empty-action').textContent=filtered?t('Wyczyść filtry'):t('Dodaj zadanie');$('#empty-action').dataset.filtered=String(!!filtered);
     $('#results-status').textContent=t('Wyświetlono: {shown} · w tym widoku: {total}',{shown:visible.length,total:c[view]});
+    $('.task-panel').hidden=['calendar','reports'].includes(view);
+    $('#calendar-panel').hidden=view!=='calendar';$('#reports-panel').hidden=view!=='reports';
     const hasSamples=tasks.some(t=>t.sample);$('#sample-badge').hidden=!hasSamples;$('#clear-demo').hidden=!hasSamples;
+    document.dispatchEvent(new CustomEvent('taskly:render',{detail:{view}}));
   }
   function openEditor(task=null) {
     editingId=task?.id||null;$('#editor-title').textContent=task?t('Edytuj zadanie'):t('Nowe zadanie');$('#save-task').textContent=task?t('Zapisz zmiany'):t('Dodaj zadanie');
-    $('#task-title').value=task?(task.sample?t(task.title):task.title):'';$('#task-notes').value=task?(task.sample?t(task.notes):task.notes):'';$('#task-due').value=task?.due||(view==='today'?day:'');$('#task-priority').value=task?.priority||'medium';$('#form-error').textContent='';$('#editor').showModal();$('#task-title').focus();
+    $('#task-title').value=task?(task.sample?t(task.title):task.title):'';$('#task-notes').value=task?(task.sample?t(task.notes):task.notes):'';$('#task-due').value=task?.due||(['today','calendar'].includes(view)?day:'');$('#task-priority').value=task?.priority||'medium';$('#form-error').textContent='';$('#editor').showModal();$('#task-title').focus();
   }
   function remove(taskId) {
     const index=tasks.findIndex(t=>t.id===taskId);if(index<0)return;const [removed]=tasks.splice(index,1);persist();render();
     if(storageHealthy)toast(t('Zadanie usunięte.'),()=>{if(!tasks.some(t=>t.id===removed.id)){tasks.splice(Math.min(index,tasks.length),0,removed);persist();render();}});
-    $('#quick-title').focus();
+    $(view==='calendar'?'#add-day':'#quick-title').focus();
   }
   function changeView(next, animate=true) {
     if (!Object.hasOwn(viewNames,next)) return;
@@ -94,7 +97,7 @@
     try {
       const input=M.validate({title:$('#task-title').value,notes:$('#task-notes').value,due:$('#task-due').value,priority:$('#task-priority').value});
       if(editingId){const task=tasks.find(t=>t.id===editingId);if(!task)throw new Error(t('To zadanie zostało usunięte w innym oknie. Zamknij formularz i odśwież listę.'));Object.assign(task,input,{updatedAt:Date.now(),sample:false});}
-      else{tasks.unshift(M.create(input,id()));view=input.due===day&&view==='today'?'today':'all';$('#search').value='';$('#priority-filter').value='all';}
+      else{tasks.unshift(M.create(input,id()));view=view==='calendar'?'calendar':input.due===day&&view==='today'?'today':'all';$('#search').value='';$('#priority-filter').value='all';}
       persist();render();history.replaceState(null,'','#'+view);$('#editor').close();$('#new-task').focus();
     }catch(error){$('#form-error').textContent=t(error.message);}
   });
@@ -104,7 +107,7 @@
   $('#dismiss-toast').addEventListener('click',()=>{clearTimeout(toastTimer);$('#toast').hidden=true;undoAction=null;});
   $('#clear-demo').addEventListener('click',()=>$('#confirm-dialog').showModal());
   $('#confirm-dialog').addEventListener('close',()=>{if($('#confirm-dialog').returnValue==='remove'){const samples=tasks.filter(t=>t.sample);tasks=tasks.filter(t=>!t.sample);persist();render();if(storageHealthy)toast(t('Przykładowe zadania usunięte.'),()=>{const ids=new Set(tasks.map(t=>t.id));tasks.push(...samples.filter(t=>!ids.has(t.id)));persist();render();});}});
-  $('#export').addEventListener('click',()=>{const data=JSON.stringify({version:1,exportedAt:new Date().toISOString(),tasks},null,2);const url=URL.createObjectURL(new Blob([data],{type:'application/json'}));const a=node('a');a.href=url;a.download=`taskly-${M.localDate()}.json`;a.hidden=true;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);});
+  $('#backup-json').addEventListener('click',()=>{const data=JSON.stringify({version:1,exportedAt:new Date().toISOString(),tasks},null,2);const url=URL.createObjectURL(new Blob([data],{type:'application/json'}));const a=node('a');a.href=url;a.download=`taskly-${M.localDate()}.json`;a.hidden=true;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);});
   document.addEventListener('keydown',event=>{if(event.ctrlKey||event.metaKey||event.altKey||event.repeat||$('dialog[open]')||event.target.closest('input,textarea,select,[contenteditable]'))return;if(event.key.toLowerCase()==='n'){event.preventDefault();openEditor();}if(event.key==='/'){event.preventDefault();$('#search').focus();}});
   window.addEventListener('storage',event=>{if(event.key!==KEY&&event.key!==null)return;try{tasks=event.newValue?M.decode(event.newValue):[];render();toast(t('Lista została zaktualizowana w innym oknie.'));}catch{toast(t('Nie udało się odczytać zmian z innego okna.'));}});
   function updateDay(){day=M.localDate();$('#today-label').textContent=new Intl.DateTimeFormat(I.language,{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date());render();}
@@ -115,5 +118,13 @@
     $('#save-status').textContent=storageHealthy?t('Zapis na tym urządzeniu'):t('Brak trwałego zapisu — eksportuj');
     updateDay();
   });
+  window.TasklyApp={getTasks:()=>tasks,row,openEditor,changeView,toast,
+    switchProfile(){
+      const nextKey=TasklyProfiles.key();const raw=localStorage.getItem(nextKey);const loaded=raw===null?[]:M.decode(raw);
+      KEY=nextKey;tasks=loaded;editingId=null;undoAction=null;clearTimeout(toastTimer);$('#toast').hidden=true;
+      document.querySelectorAll('dialog[open]').forEach(dialog=>dialog.close());
+      $('#search').value='';$('#priority-filter').value='all';changeView('all');history.replaceState(null,'','#all');
+    }
+  };
   updateDay();
 })();

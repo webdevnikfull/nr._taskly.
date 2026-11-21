@@ -2,8 +2,8 @@
 (() => {
   'use strict';
   const dictionaries=window.TasklyTranslations;
-  const languages=Object.keys(dictionaries);
-  let language='pl';
+  const languages=['en','pl','de','uk'];
+  let language='en';
   try { const saved=localStorage.getItem('taskly.language.v1'); if(languages.includes(saved))language=saved; } catch {}
   function t(key,values={}) {
     let value=dictionaries[language][key] || key;

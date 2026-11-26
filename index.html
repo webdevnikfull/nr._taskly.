@@ -1,9 +1,9 @@
 <!doctype html>
-<html data-theme="dark" lang="pl">
+<html data-project="taskly" data-theme="light" lang="pl">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Taskly — przejrzysta aplikacja do zarządzania zadaniami. Projekt portfolio Nikity Rysieva.">
+  <meta name="description" content="Taskly — przejrzysta aplikacja do zarządzania zadaniami.">
   <meta name="theme-color" content="#102866">
   <title>Taskly — Twój dzień, uporządkowany</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -11,20 +11,22 @@
   <link rel="stylesheet" href="premium.css?v=3">
   <script src="model.js" defer></script>
   <script src="translations.js" defer></script>
-  <script src="i18n.js" defer></script>
-  <script src="profiles.js" defer></script><script src="workspace-model.js" defer></script><script src="workspace-i18n.js" defer></script><script src="app.js" defer></script><script src="workspace.js" defer></script><link rel="stylesheet" href="workspace.css">
-<link rel="stylesheet" href="practice.css"><script defer src="practice.js"></script></head>
+  <script src="i18n.js?v=20261126" defer></script>
+  <script src="profiles.js" defer></script><script src="workspace-model.js" defer></script><script src="workspace-i18n.js?v=taskly-premium-20261126" defer></script><script src="app.js?v=suite-premium-20261126" defer></script><script src="workspace.js?v=taskly-premium-20261126" defer></script><link rel="stylesheet" href="workspace.css">
+<script defer src="project-controls.js?v=taskly-premium-20261126"></script><link rel="stylesheet" href="taskly-interface.css">
+<link rel="stylesheet" href="suite-interface.css?v=20261126"><script defer src="suite-controls.js?v=20261126"></script>
+</head>
 <body>
   <a class="skip" href="#main">Przejdź do zadań</a>
   <svg class="sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1.5"/><rect x="14" y="4" width="6" height="6" rx="1.5"/><rect x="4" y="14" width="6" height="6" rx="1.5"/><rect x="14" y="14" width="6" height="6" rx="1.5"/></symbol>
     <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></symbol>
-    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="16" rx="3"/><path d="M8 3v4m8-4v4M4 11h16m-11 4h2m2 0h2"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.7 13.1A9 9 0 0 1 10.9 3.3a9 9 0 1 0 9.8 9.8Z"/></symbol><symbol id="i-calendar" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="16" rx="3"/><path d="M8 3v4m8-4v4M4 11h16m-11 4h2m2 0h2"/></symbol>
     <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
     <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></symbol>
     <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
     <symbol id="i-edit" viewBox="0 0 24 24"><path d="m15 4 5 5M4 20l5-1L20 8a3.5 3.5 0 0 0-5-5L4 15v5Z"/></symbol>
-    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7m4-7v7"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7m4-7v7"/></symbol>
     <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5"/></symbol>
     <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-4-4 4 4 4-4M4 16v5h16v-5"/></symbol>
     <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
@@ -41,13 +43,13 @@
         <button class="nav-item" data-view="done"><svg><use href="#i-check"/></svg><span>Ukończone</span><b data-count="done">0</b></button>
 <button class="nav-item" data-view="calendar"><svg><use href="#i-calendar"/></svg><span data-x="calendar"></span></button><button class="nav-item" data-view="reports"><svg><use href="#i-grid"/></svg><span data-x="reports"></span></button>
       </nav>
-      <div class="sidebar-tip focus-card"><span class="tip-icon" aria-hidden="true">✳</span><h3 data-x="focusTitle"></h3><p id="focus-copy"></p><button id="focus-action" class="focus-action"><span data-x="focusAction"></span><span aria-hidden="true">↗</span></button><div class="focus-progress"><i id="focus-progress"></i></div></div>
+      <div class="sidebar-tip focus-card"><span class="tip-icon" aria-hidden="true">✳</span><h3 data-x="focusTitle"></h3><p id="focus-copy"></p><button id="focus-action" class="focus-action"><span data-x="focusAction"></span><span aria-hidden="true">↗</span></button><button type="button" id="focus-complete" class="button secondary focus-complete"><svg aria-hidden="true"><use href="#i-check"/></svg><span data-x="finishFocus"></span></button><div class="focus-progress"><i id="focus-progress"></i></div></div>
       <div class="sidebar-bottom"><span class="local-dot"></span><span id="save-status">Zapis na tym urządzeniu</span></div>
     </aside>
     <div class="main-shell">
-      <header class="topbar"><span><span class="breadcrumb">Moja przestrzeń</span><span class="slash">/</span><strong id="breadcrumb-view">Wszystkie zadania</strong></span><div class="topbar-right"><button type="button" class="practice-theme" aria-label="Theme">☀</button><select id="language" class="language-select" aria-label="Język aplikacji"><option value="pl" lang="pl">Polski</option><option value="en" lang="en">English</option><option value="de" lang="de">Deutsch</option><option value="uk" lang="uk">Українська</option></select><button class="profile-button" id="profile-open"><span class="profile-avatar">◉</span><span id="profile-name"></span></button><button class="icon-button" id="export" aria-label="Raporty" title="Raporty"><svg><use href="#i-download"/></svg></button></div></header>
+      <header class="topbar"><span><span class="breadcrumb">Moja przestrzeń</span><span class="slash">/</span><strong id="breadcrumb-view">Wszystkie zadania</strong></span><div class="topbar-right"><button type="button" class="project-theme" aria-label="Use dark theme"><svg aria-hidden="true"><use href="#i-moon"/></svg></button><select id="language" class="language-select" aria-label="Język aplikacji"><option value="pl" lang="pl">Polski</option><option value="en" lang="en">English</option><option value="de" lang="de">Deutsch</option><option value="es" lang="es">Español</option><option value="fr" lang="fr">Français</option><option value="uk" lang="uk">Українська</option><option value="ru" lang="ru">Русский</option></select><button class="profile-button" id="profile-open"><span class="profile-avatar">◉</span><span id="profile-name"></span></button><button class="icon-button" id="export" aria-label="Raporty" title="Raporty"><svg><use href="#i-download"/></svg></button></div></header>
       <main id="main">
-        <div class="hero"><div><button class="date-clock" id="date-calendar" type="button"><span class="date-icon" aria-hidden="true"><svg><use href="#i-calendar"/></svg></span><span><span id="today-label"></span><span class="clock-line"><time id="live-clock"></time><small id="clock-zone"></small></span></span><span class="date-arrow" aria-hidden="true">↗</span></button><h1>Mniej chaosu.<br><span>Więcej zrobione.</span></h1><p class="hero-subtitle">Przestrzeń na to, co naprawdę chcesz zrobić.</p></div><button class="button primary" id="new-task"><svg><use href="#i-plus"/></svg>Nowe zadanie <kbd>N</kbd></button></div>
+        <div class="hero"><div><h1>Mniej chaosu.<br><span>Więcej zrobione.</span></h1><p class="hero-subtitle">Przestrzeń na to, co naprawdę chcesz zrobić.</p></div><button class="button primary" id="new-task"><svg><use href="#i-plus"/></svg>Nowe zadanie <kbd>N</kbd></button></div>
         <section class="metrics" aria-label="Podsumowanie zadań">
           <button type="button" data-view="all" aria-pressed="false" aria-controls="task-list" class="metric"><span class="metric-label"><svg><use href="#i-grid"/></svg>Do zrobienia</span><span class="metric-value" id="metric-open">0</span><span class="metric-note">Jeden krok po drugim</span><span class="metric-arrow" aria-hidden="true">↗</span></button>
           <button type="button" data-view="today" aria-pressed="false" aria-controls="task-list" class="metric"><span class="metric-label"><svg><use href="#i-sun"/></svg>Na dzisiaj</span><span class="metric-value" id="metric-today">0</span><span class="metric-note" id="overdue-note">W swoim tempie</span><span class="metric-arrow" aria-hidden="true">↗</span></button>
@@ -69,8 +71,8 @@
         </section>
         <section id="reports-panel" class="workspace-panel" hidden aria-labelledby="reports-title"><div class="workspace-heading"><div><p class="overline">TASKLY / INSIGHTS</p><h2 id="reports-title" data-x="reportTitle"></h2></div><label class="month-picker"><span data-x="chooseMonth"></span><input id="report-month" type="month" min="1900-01" max="9999-12"></label></div><div id="report-sheet"><div class="report-header"><strong>taskly<span>.</span></strong><div><h3 id="report-month-title"></h3><p id="report-profile"></p></div></div><div class="report-overview"><div id="report-ring" class="report-ring"><span id="report-percent"></span></div><div class="report-stats"><div><span data-x="total"></span><strong id="report-total"></strong></div><div><span data-x="done"></span><strong id="report-done"></strong></div><div><span data-x="open"></span><strong id="report-open"></strong></div></div></div><h3 data-x="byPriority"></h3><div id="report-bars"></div><div class="report-caption"><p data-x="reportBasis"></p><p data-x="excluded"></p><p id="report-generated"></p></div></div><div class="report-actions"><button id="report-download" class="button primary" data-x="download"></button><button id="report-print" class="button secondary" data-x="print"></button><button id="backup-json" class="text-button" data-x="backup"></button></div></section>
         <div class="bottom-note"><span><span class="tiny-check">✓</span>Twoje zadania zostają w tej przeglądarce. Eksportuj je, aby zachować kopię.</span><button id="clear-demo" class="text-button">Usuń przykłady</button></div>
-        <footer><span>taskly. <span class="footer-divider">/</span> Designed for a little more clarity.</span><a href="https://github.com/webdevnikfull" target="_blank" rel="noopener noreferrer">Nikita Rysiev ↗</a></footer>
-      <aside class="practice-panel"><details><summary><span class="practice-icon" aria-hidden="true">✓</span> <span data-case="1"></span> <small>IT Service Desk</small></summary><div class="practice-tasks"><label><input type="checkbox"> <span data-case="2"></span></label><label><input type="checkbox"> <span data-case="3"></span></label><output class="completion"></output></div></details><div class="practice-time"><span data-word="1"></span> <b class="elapsed">00:00:00</b><button type="button" class="timer-toggle"></button><button type="button" class="timer-reset" data-word="4"></button></div></aside></main>
+        
+      </main>
     </div>
   </div>
   <dialog id="profile-dialog" aria-labelledby="profile-title"><form id="profile-form"><div class="dialog-header"><div><p class="overline" data-x="profile"></p><h2 id="profile-title" data-x="login"></h2></div><button id="profile-close" class="icon-button" type="button" data-x-label="cancel">×</button></div><p class="profile-info" data-x="localInfo"></p><div class="profile-tabs"><button type="button" data-auth="login" data-x="login" aria-pressed="true"></button><button type="button" data-auth="register" data-x="register" aria-pressed="false"></button></div><div id="profile-inputs"><label class="field"><span data-x="name"></span><input id="account-name" required minlength="2" maxlength="40" autocomplete="username"></label><label class="field"><span data-x="password"></span><input id="account-password" type="password" required minlength="8" maxlength="128" autocomplete="current-password"></label><p class="profile-rules" data-x="credentialsRules"></p></div><p id="profile-error" role="alert" class="form-error"></p><div class="dialog-footer"><button type="button" id="profile-logout" class="button secondary" data-x="logout" hidden></button><button id="profile-submit" type="submit" class="button primary" data-x="login"></button></div></form></dialog>

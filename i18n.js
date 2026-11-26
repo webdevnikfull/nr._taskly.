@@ -2,7 +2,7 @@
 (() => {
   'use strict';
   const dictionaries=window.TasklyTranslations;
-  const languages=['en','pl','de','uk'];
+  const languages=['pl', 'en', 'de', 'es', 'fr', 'uk', 'ru'];
   let language='en';
   try { const saved=localStorage.getItem('taskly.language.v1'); if(languages.includes(saved))language=saved; } catch {}
   function t(key,values={}) {

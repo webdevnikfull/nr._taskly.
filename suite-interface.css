@@ -1,0 +1,106 @@
+:root{--suite-moon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.7%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M20.7%2013.1A9%209%200%200%201%2010.9%203.3a9%209%200%201%200%209.8%209.8Z%22/%3E%3C/svg%3E");--suite-sun:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.7%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%224%22/%3E%3Cpath%20d%3D%22M12%202v2m0%2016v2M2%2012h2m16%200h2M5%205l1.5%201.5m11%2011L19%2019M5%2019l1.5-1.5m11-11L19%205%22/%3E%3C/svg%3E")}
+:root {
+  --suite-surface:var(--panel,var(--paper,var(--white,var(--surface,#fff))));
+  --suite-text:var(--ink,var(--text,#172746));
+  --suite-line:var(--line,var(--border,#dbe4ef));
+  --suite-accent:#3158a6;
+  --suite-wash:#edf2fb;
+  --suite-focus:#3862c0;
+}
+:root[data-theme=dark] {
+  --suite-void:#0e1624;--suite-card:#182436;--suite-inset:#111c2d;
+  --suite-border:#34465f;--suite-main:#eef4ff;--suite-secondary:#b4c4db;
+  --suite-surface:var(--suite-card);--suite-text:var(--suite-main);--suite-line:var(--suite-border);
+  --suite-accent:#c4d8ff;--suite-wash:#243650;--suite-focus:#a6c5ff;
+  --muted:var(--suite-secondary);--ink:var(--suite-main);--text:var(--suite-main);
+  --navy:var(--suite-main);--border:var(--suite-border);--line:var(--suite-border);
+  --bg:var(--suite-void);--paper:var(--suite-card);--panel:var(--suite-card);--white:var(--suite-card);
+  --soft:var(--suite-wash);--surface-alt:var(--suite-inset);
+}
+.suite-legacy-control { display:none!important; }
+.suite-language { position:relative;flex:none;align-self:center;font:inherit;margin:0; }
+:is(.suite-language summary,header .project-theme,header .project-account,header #profile-open) {
+  box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  border:1px solid var(--suite-line);border-radius:999px;background:var(--suite-surface);
+  color:var(--suite-text);height:42px;min-height:42px;padding:0 12px;
+  font-size:.8125rem;font-weight:650;line-height:1;white-space:nowrap;cursor:pointer;list-style:none;
+  transition:background .18s,border-color .18s,box-shadow .18s;
+}
+.suite-language summary { min-width:91px; font-size:.8125rem;font-weight:700; }
+.suite-language summary::-webkit-details-marker { display:none; }
+.suite-language summary::marker { content:""; }
+.suite-language summary svg,header :is(.project-account,#profile-open) svg { width:17px;height:17px;flex:none;fill:none;stroke:currentColor;stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round; }
+.suite-language summary .suite-chevron { width:12px;height:12px;transition:transform .18s ease; }
+.suite-language[open] .suite-chevron { transform:rotate(180deg); }
+.suite-language-options {
+  z-index:100;position:absolute;inset:calc(100% + 8px) 0 auto auto;min-width:174px;
+  width:max-content;max-width:min(230px,calc(100vw - 30px));padding:5px;box-sizing:border-box;
+  border:1px solid var(--suite-line);border-radius:14px;background:var(--suite-surface);box-shadow:0 16px 38px #050e2529;
+  max-height:min(320px,58dvh);overflow-y:auto;
+}
+.suite-language-options button {
+  width:100%;min-height:36px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:6px 9px;text-align:left;border:0;border-radius:8px;background:transparent;
+  color:var(--suite-text);font:inherit;font-size:.85rem;white-space:nowrap;cursor:pointer;
+}
+.suite-language-options small { font-size:.69rem;font-weight:700;color:var(--suite-accent); }
+.suite-language-options button:is(:hover,[aria-current=true]),.suite-language[open] summary { background:var(--suite-wash);color:var(--suite-text); }
+:is(.suite-language summary,header .project-theme,header .project-account,header #profile-open):hover {
+  background:var(--suite-wash);border-color:var(--suite-focus);
+}
+:is(.suite-language summary,.suite-language-options button,header .project-theme,header .project-account,header #profile-open):focus-visible {
+  outline:2px solid var(--suite-focus);outline-offset:2px;
+}
+header .project-theme:is(button) { width:42px;min-width:42px;padding:0;font-size:0;box-shadow:none; }
+header .project-theme>svg { display:none!important; }
+header .project-theme::before {
+  content:"";width:18px;height:18px;display:block;background:currentColor;
+  mask:var(--suite-moon) center/contain no-repeat;
+}
+:root[data-theme=dark] header .project-theme::before { mask-image:var(--suite-sun); }
+header #profile-open .profile-avatar { display:grid;place-items:center;width:auto;height:auto;background:transparent;color:inherit;padding:0; }
+header #profile-name,header .project-account-name { max-width:13ch;overflow:hidden;text-overflow:ellipsis;font-size:.8125rem; }
+.suite-clock {
+  display:inline-flex;align-items:center;gap:8px;min-height:35px;padding:5px 10px;margin:0;
+  border:1px solid var(--suite-line);border-radius:10px;background:var(--suite-surface);
+  color:var(--suite-accent);line-height:1.4;font-size:.77rem;font-weight:600;
+  font-variant-numeric:tabular-nums;letter-spacing:normal;
+}
+.suite-clock svg { width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;flex:none; }
+.suite-clock time { color:var(--suite-text); }
+.suite-toolbar { display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-block:10px; }
+.suite-mini { display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:6px 11px;min-height:36px;border:1px solid var(--suite-line);border-radius:9px;color:var(--suite-text);background:var(--suite-surface);font:inherit;font-size:.8rem;cursor:pointer; }
+.suite-mini:is(:hover,[aria-pressed=true]) { background:var(--suite-wash);border-color:var(--suite-focus); }
+.suite-mini:focus-visible { outline:2px solid var(--suite-focus);outline-offset:2px; }
+.suite-mini:disabled { opacity:.55;cursor:default; }
+.suite-mini svg { width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round; }
+.suite-mini[hidden] { display:none; }
+:root[data-theme=dark] body { color:var(--suite-main); }
+:root[data-theme=dark] :is(.input-card,.result-card,.context,.workspace,.panel,.stat,.project,.studio-visual-card,dialog) { border-color:var(--suite-border); }
+:root[data-theme=dark] :is(input:not([type=range]),select,textarea) { color:var(--suite-main); }
+:root[data-theme=dark] :is(input,textarea)::placeholder { color:var(--suite-secondary);opacity:1; }
+:root[data-theme=dark] :is(.button.secondary,.button-secondary,.suite-mini,.source-label) { color:var(--suite-main); }
+@media(max-width:700px) {
+  .suite-language summary { min-width:75px;padding:0 8px;gap:5px; }
+  :is(.topbar-right,.top-actions,.header-tools,.tool-header-actions,.nav-right) { gap:6px;flex-wrap:wrap;justify-content:flex-end; }
+  .suite-language-options { inset-inline-end:-12px; }
+}
+@media(max-width:400px) {
+  header :is(.project-account,#profile-open) { padding:0;width:42px;flex:none; }
+  header :is(.project-account-name,#profile-name) { position:absolute;width:1px;height:1px;clip-path:inset(50%);overflow:hidden; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .suite-language summary,.suite-language summary .suite-chevron,header :is(.project-theme,.project-account,#profile-open) { transition:none; }
+}
+html[data-theme=dark] .sidebar{border-color:var(--suite-border)} html[data-theme=dark] .app-shell{background:transparent} .focus-card .tip-icon{color:var(--suite-accent)}
+
+
+@media(max-width:520px){
+  .suite-language summary,header .project-theme:is(button),header :is(.project-account,#profile-open){height:40px;min-height:40px}
+  header :is(.project-account,#profile-open){width:40px;flex:none;padding:0}
+  header :is(.project-account-name,#profile-name){position:absolute;width:1px;height:1px;clip-path:inset(50%);overflow:hidden}
+  header .project-theme:is(button){width:40px;min-width:40px}
+  .suite-language summary{min-width:70px}
+}
+
+@media(min-width:1801px){.app-shell{max-width:none}}

@@ -9,10 +9,6 @@
  const displayTitle=task=>task.sample?I.t(task.title):task.title;
  const priorityLabel=priority=>I.t({high:'Wysoki',medium:'Średni',low:'Niski'}[priority]);
  function navigate(view){A.changeView(view);if(location.hash!=='#'+view)location.hash=view;}
- function clock(){
-  const now=new Date();$('#live-clock').textContent=new Intl.DateTimeFormat(I.language,{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(now);
-  $('#live-clock').dateTime=now.toISOString();$('#clock-zone').textContent=X('clock');
- }
  function profileUI(){
   const current=TasklyProfiles.current();$('#profile-name').textContent=current?.name||X('login');
   $('.workspace strong').textContent=current?.name||I.t('Moja przestrzeń');
@@ -25,6 +21,7 @@
  function focusUI(){
   const tasks=TaskModel.visible(A.getTasks(),{view:'all',sort:'priority'}), counts=TaskModel.counts(A.getTasks(),TaskModel.localDate());
   $('#focus-copy').textContent=tasks.length?displayTitle(tasks[0]):X('allClear');
+  $('#focus-complete').hidden=!tasks.length;
   $('#focus-action').disabled=!tasks.length;$('#focus-action').title=tasks.length?X('focusCopy'):X('allClear');
   $('#focus-progress').style.width=`${counts.total?Math.round(counts.done/counts.total*100):0}%`;
  }
@@ -63,14 +60,19 @@
   document.querySelectorAll('[data-x]').forEach(n=>n.textContent=X(n.dataset.x));
   document.querySelectorAll('[data-x-label]').forEach(n=>n.setAttribute('aria-label',X(n.dataset.xLabel)));
   $('#calendar-prev').setAttribute('aria-label',X('previous'));$('#calendar-next').setAttribute('aria-label',X('next'));$('#add-day').setAttribute('aria-label',X('addDay'));
-  $('#export').setAttribute('aria-label',X('reportTitle'));$('#export').title=X('reportTitle');$('#profile-open').setAttribute('aria-label',X('profileAction'));$('#date-calendar').title=X('calendar');
-  profileUI();focusUI();clock();renderCalendar();renderReport();
+  $('#export').setAttribute('aria-label',X('reportTitle'));$('#export').title=X('reportTitle');$('#profile-open').setAttribute('aria-label',X('profileAction'));
+  profileUI();focusUI();renderCalendar();renderReport();
   if(['calendar','reports'].includes(activeView))$('#breadcrumb-view').textContent=X(activeView);
  }
  document.addEventListener('taskly:render',event=>{activeView=event.detail.view;profileUI();focusUI();if(activeView==='calendar')renderCalendar();if(activeView==='reports')renderReport();});
  document.addEventListener('taskly:language',apply);
- $('#date-calendar').addEventListener('click',()=>{selectedDay=TaskModel.localDate();calMonth=selectedDay.slice(0,7);navigate('calendar');$('#calendar-panel').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});});
  $('#export').addEventListener('click',()=>navigate('reports'));
+ $('#focus-complete').addEventListener('click', () => {
+  const next = TaskModel.visible(A.getTasks(), { sort: 'priority' })[0];
+  if (!next) return;
+  A.setCompleted(next, true);
+  $(TaskModel.visible(A.getTasks()).length ? '#focus-complete' : '#new-task').focus();
+ });
  $('#focus-action').addEventListener('click',()=>{const next=TaskModel.visible(A.getTasks(),{sort:'priority'})[0];if(next)A.openEditor(next);});
  for(const [id,delta] of [['calendar-prev',-1],['calendar-next',1]])$('#'+id).addEventListener('click',()=>{const date=M.monthDate(calMonth);date.setMonth(date.getMonth()+delta);calMonth=TaskModel.localDate(date).slice(0,7);renderCalendar();});
  $('#calendar-month').addEventListener('change',event=>{try{M.monthDate(event.target.value);calMonth=event.target.value;renderCalendar();}catch{event.target.value=calMonth;A.toast(X('monthError'));}});
@@ -102,6 +104,5 @@
   let y=wrap(X('reportBasis'),90,905,1200);y=wrap(X('excluded'),90,y,1200);text(`${X('generated')}: ${new Intl.DateTimeFormat(I.language,{dateStyle:'medium',timeStyle:'short'}).format(new Date())}`,90,1043,16);
   canvas.toBlob(blob=>{if(!blob)return;const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`taskly-report-${reportMonth}.png`;a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);},'image/png');
  });
- setInterval(()=>{if(!document.hidden)clock();},1000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)clock();});
  apply();
 })();
